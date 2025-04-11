@@ -14,9 +14,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,7 +41,14 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+//                    Greeting("Android")
+//                    HelloContent()
+//                    HelloContentWithState()
+//                    HelloContentStateless(name = "Stateless") {
+//                    }
+                    // above function overlapped together
+                    // use ComponentStack() to stack them together
+                    ComponentStack()
                 }
             }
         }
@@ -148,5 +160,87 @@ fun DefaultPreview() {
         Surface {
             Greeting("Android")
         }
+    }
+}
+
+@Composable
+fun HelloContent() { // not able to change state, no state
+    Column (modifier = Modifier.padding(16.dp)){
+        Text(
+            modifier = Modifier.padding(bottom = 8.dp),
+            text = "Hello!",
+            style = MaterialTheme.typography.body2
+        )
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            label = { Text(text = "I have no state") }
+        )
+    }
+}
+
+@Composable
+fun HelloContentWithState() { // statefull
+    // var name: String = "" // state
+    // by: delegation
+    // by remember: remember the previous state
+    // mutableStateOf: observable
+    var name by remember { mutableStateOf("") } // state
+    Column {
+        if (name.isNotEmpty()) {
+            Text(
+                modifier = Modifier.padding(bottom = 8.dp),
+                text = "Hello! $name",
+                style = MaterialTheme.typography.body2
+            )
+        }
+        OutlinedTextField(
+            value = name,
+            onValueChange = {
+                name = it
+            },
+            label = { Text(text = "i have state") }
+        )
+    }
+}
+
+// does not manage its own state
+// input: name, callback function onNameChange
+// does not have remember {mutableStateOf()} logic
+@Composable
+fun HelloContentStateless(name: String, onNameChange: (String) -> Unit) {
+    Column {
+        if (name.isNotEmpty()) {
+            Text(
+                modifier = Modifier.padding(bottom = 8.dp),
+                text = "Hello! $name",
+                style = MaterialTheme.typography.body2
+            )
+        }
+        OutlinedTextField(
+            value = name,
+            onValueChange = onNameChange,
+            label = { Text(text = "I am stateless") }
+        )
+    }
+}
+
+@Composable
+fun ComponentStack() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)
+    ) {
+        Greeting("Android")
+        HelloContent()
+        HelloContentWithState()
+        // pass a function as a parameter
+        //The parent (ComponentStack) owns and manages the state (statelessName)
+        //When text changes, the component calls back to the parent to update the state
+        //The updated state flows back down as a new parameter value
+        var statelessName by remember { mutableStateOf("") }
+        HelloContentStateless(name = statelessName) { statelessName = it }
     }
 }
