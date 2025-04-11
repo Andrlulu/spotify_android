@@ -1,6 +1,7 @@
 package com.laioffer.spotify
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,8 @@ import com.laioffer.spotify.ui.theme.SpotifyTheme
 
 // customized extend AppCompatActivity
 class MainActivity : AppCompatActivity() {
+    // creating tag for debuging purpose, using log
+    private val TAG = "lifecycle"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -28,6 +31,31 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+    //testing getting log at different lifecycle
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "We are at onStart()")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "We are at onResume()")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "We are at onPause()")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "We are at onStop()")
+    }
+
+    override fun onDestroy() {
+        Log.d(TAG, "We are at onDestroy()")
+        super.onDestroy()
     }
 }
 

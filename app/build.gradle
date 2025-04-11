@@ -8,9 +8,9 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.laioffer.spotify"
-        minSdk 23
-        targetSdk 33
+        applicationId "com.laioffer.spotify" //every app has unique id
+        minSdk 23 // min sdk run on
+        targetSdk 33 // api level app designed to run, highest android sdk
         versionCode 1
         versionName "1.0"
 
@@ -46,6 +46,7 @@ android {
     }
 }
 
+//all dependency libraries used
 dependencies {
     // customized update
 
