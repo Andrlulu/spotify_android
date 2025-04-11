@@ -1,10 +1,11 @@
 package com.laioffer.spotify
 
+import android.media.Image
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -22,10 +24,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.laioffer.spotify.ui.theme.SpotifyTheme
 
 // customized extend AppCompatActivity
@@ -48,37 +54,56 @@ class MainActivity : AppCompatActivity() {
 //                    }
                     // above function overlapped together
                     // use ComponentStack() to stack them together
-                    ComponentStack()
+                    //ComponentStack()
+                    AlbumCover()
                 }
             }
         }
     }
-    //testing getting log at different lifecycle
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "We are at onStart()")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "We are at onResume()")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "We are at onPause()")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "We are at onStop()")
-    }
-
-    override fun onDestroy() {
-        Log.d(TAG, "We are at onDestroy()")
-        super.onDestroy()
+}
+@Preview(showBackground = true, widthDp = 412, heightDp = 732)
+@Composable
+fun DefaultPreview() {
+    SpotifyTheme {
+        Surface {
+//            Greeting("Android")
+//            LoadingSection("Screen is loading")
+            AlbumCover()
+        }
     }
 }
+@Composable
+fun AlbumCover() {
+    Column {
+        Box (modifier = Modifier.size(160.dp)) {
+            // https://upload.wikimedia.org/wikipedia/en/d/d1/Stillfantasy.jpg
+//            Image(painter = , contentDescription = )
+            AsyncImage(
+                model = "https://upload.wikimedia.org/wikipedia/en/d/d1/Stillfantasy.jpg",
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillBounds
+            )
+            Text(
+                text = "Still Fantasy",
+                modifier = Modifier
+                    .padding(start = 2.dp, bottom = 4.dp) // left is start, right is end
+                    .align(Alignment.BottomStart),
+                style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+                color = Color.White
+            )
+        }
+
+        Text(
+            text = "Jay Chou",
+            modifier = Modifier.padding(top = 4.dp, start = 2.dp),
+            style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+            color = Color.LightGray
+        )
+    }
+}
+
+
 // composable function + previous
 @Composable
 @Preview()
@@ -140,6 +165,8 @@ fun PreviewArtistCardColumn() {
 // Compose modifiers:
 @Composable
 private fun Greeting(name: String) {
+    // Top level function: not associated with any class or object
+    // can be used from anywhere in the same module or package
     Column(modifier = Modifier
         .fillMaxWidth()
         .wrapContentHeight()
@@ -150,16 +177,6 @@ private fun Greeting(name: String) {
     ) {
         Text(text = "Hello,")
         Text(text = name)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    SpotifyTheme {
-        Surface {
-            Greeting("Android")
-        }
     }
 }
 
@@ -242,5 +259,17 @@ fun ComponentStack() {
         //The updated state flows back down as a new parameter value
         var statelessName by remember { mutableStateOf("") }
         HelloContentStateless(name = statelessName) { statelessName = it }
+    }
+}
+
+// Create album cover:
+@Composable
+fun LoadingSection(text: String) {
+    Row(modifier = Modifier.padding(8.dp)) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.body2,
+            color = Color.White
+        )
     }
 }
