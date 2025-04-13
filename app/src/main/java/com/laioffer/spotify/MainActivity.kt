@@ -59,17 +59,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-}
-@Preview(showBackground = true, widthDp = 412, heightDp = 732)
-@Composable
-fun DefaultPreview() {
-    SpotifyTheme {
-        Surface {
-//            Greeting("Android")
-//            LoadingSection("Screen is loading")
-            AlbumCover()
-        }
+        setContentView(R.layout.activity_main)
     }
 }
 @Composable
@@ -102,8 +92,17 @@ fun AlbumCover() {
         )
     }
 }
-
-
+@Preview(showBackground = true, widthDp = 412, heightDp = 732)
+@Composable
+fun DefaultPreview() {
+    SpotifyTheme {
+        Surface {
+//            Greeting("Android")
+//            LoadingSection("Screen is loading")
+            AlbumCover()
+        }
+    }
+}
 // composable function + previous
 @Composable
 @Preview()
