@@ -19,9 +19,10 @@ public class HomeRepository @Inject constructor(
 //        return sections ?: listOf()
 //    }
 
-    // suspend: a security to avoid callback hell, only
+    // suspend: a security to avoid callback hell, making the function enforced by kotlin coroutine
     // no scope, use withContext to specify config and coroutine
     // suspend indicates that this function have scope manage
+    // withContext: change the thread
     suspend fun getHomeSections(): List<Section> = withContext(Dispatchers.IO) {
         networkApi.getHomeFeed().execute().body() ?: listOf()
     }
