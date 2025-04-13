@@ -24,15 +24,22 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.laioffer.spotify.datamodel.Section
 import com.laioffer.spotify.network.NetworkApi
 import com.laioffer.spotify.network.NetworkModule
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import retrofit2.Call
+import javax.inject.Inject
 
 // customized extend AppCompatActivity
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     // creating tag for debuging purpose, using log
     private val TAG = "lifecycle"
+
+    // field injection:
+    @Inject
+    lateinit var api: NetworkApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "We are at onCreate()")
@@ -61,17 +68,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Test Retrofit
-        val retrofit = NetworkModule.provideRetrofit()
-        //interface networkApi
-        val api: NetworkApi = retrofit.create(NetworkApi::class.java)
-        // return data type defined in the netowrkApi interface
-        val responseCall: Call<List<Section>> = api.getHomeFeed()
+        // After dependcy injection, no longer need to create retrofit
+
+//        val retrofit = NetworkModule.provideRetrofit()
+//        //interface networkApi
+//        val api: NetworkApi = retrofit.create(NetworkApi::class.java)
+//        // return data type defined in the netowrkApi interface
+//        val responseCall: Call<List<Section>> = api.getHomeFeed()
 
         // slow task, use coroutine to multi thread handling
         GlobalScope.launch(Dispatchers.IO) {
-            val response = responseCall.execute()
-            val sections = response.body()
-            Log.d("Network", sections.toString())
+//            val response = responseCall.execute()
+//            val sections = response.body()
+            // can directly use api from the lateinit/ field injection
+            // inject NetworkApi into MainActivity api field
+            //    @Inject
+            //    lateinit var api: NetworkApi
+            val response = api.getHomeFeed().execute().body()
+            Log.d("Network", response.toString())
         }
 
     }
