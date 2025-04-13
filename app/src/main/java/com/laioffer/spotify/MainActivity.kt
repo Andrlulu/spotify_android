@@ -62,9 +62,12 @@ class MainActivity : AppCompatActivity() {
 
         // Test Retrofit
         val retrofit = NetworkModule.provideRetrofit()
+        //interface networkApi
         val api: NetworkApi = retrofit.create(NetworkApi::class.java)
+        // return data type defined in the netowrkApi interface
         val responseCall: Call<List<Section>> = api.getHomeFeed()
 
+        // slow task, use coroutine to multi thread handling
         GlobalScope.launch(Dispatchers.IO) {
             val response = responseCall.execute()
             val sections = response.body()
