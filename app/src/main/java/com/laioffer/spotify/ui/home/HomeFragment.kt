@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.laioffer.spotify.R
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint // for fragment
 class HomeFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModel: HomeViewModel
+    private val viewModel: HomeViewModel by viewModels() // field injection
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,12 +22,10 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
+    // Use the viewModel in the home fragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.fetchHomeScreen()
-
-        //observe
-        viewModel.uiState
-    }
-}
+        if (viewModel.uiState.value.isLoading) {
+            viewModel.fetchHomeScreen()
+        }
+    }}

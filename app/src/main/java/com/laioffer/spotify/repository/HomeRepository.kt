@@ -2,6 +2,8 @@ package com.laioffer.spotify.repository;
 
 import com.laioffer.spotify.datamodel.Section;
 import com.laioffer.spotify.network.NetworkApi;
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 import javax.inject.Inject;
 
@@ -11,10 +13,15 @@ public class HomeRepository @Inject constructor(
 ){
 
     // FIXME: main safe: concurrent, slow code will block the main thread
-    fun getHomeSections(): List<Section> {
-        val response: Response<List<Section>> = networkApi.getHomeFeed().execute()
-        val sections: List<Section>? = response.body()
-        return sections ?: listOf()
+//    fun getHomeSections(): List<Section> {
+//        val response: Response<List<Section>> = networkApi.getHomeFeed().execute()
+//        val sections: List<Section>? = response.body()
+//        return sections ?: listOf()
+//    }
+
+    // suspend: a security to avoid callback hell, only
+    suspend fun getHomeSections(): List<Section> = withContext(Dispatchers.IO) {
+        networkApi.getHomeFeed().execute().body() ?: listOf()
     }
 }
 
