@@ -28,6 +28,7 @@ class HomeViewModel @Inject constructor(
 
     // event: fetch the network while viewModel inits
     fun fetchHomeScreen() {
+        // default main thread
         viewModelScope.launch {
             val sections = repository.getHomeSections()
 //        uiState = HomeUiState(feed = section, isLoading = false)

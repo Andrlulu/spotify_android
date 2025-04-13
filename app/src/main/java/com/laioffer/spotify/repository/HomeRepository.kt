@@ -20,6 +20,8 @@ public class HomeRepository @Inject constructor(
 //    }
 
     // suspend: a security to avoid callback hell, only
+    // no scope, use withContext to specify config and coroutine
+    // suspend indicates that this function have scope manage
     suspend fun getHomeSections(): List<Section> = withContext(Dispatchers.IO) {
         networkApi.getHomeFeed().execute().body() ?: listOf()
     }
