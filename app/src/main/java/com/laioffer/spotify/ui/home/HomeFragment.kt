@@ -1,6 +1,7 @@
 package com.laioffer.spotify.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +33,9 @@ class HomeFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 MaterialTheme(colors = darkColors()){
-                    HomeScreen(viewModel)
+                    HomeScreen(viewModel, onTap = {
+                        Log.d("HomeFragment", "We tapped ${it.name}")
+                    })
                 }
             }
         }

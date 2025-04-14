@@ -1,5 +1,6 @@
 package com.laioffer.spotify.ui.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -23,18 +24,18 @@ import com.laioffer.spotify.datamodel.Section
 
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel) { // from HomeViewModel
+fun HomeScreen(viewModel: HomeViewModel, onTap: (Album) -> Unit) { // from HomeViewModel
     // Compose does't require to use MutableState<T>, to hold state; it supports other
     // observable types. Must convert another observable type to a State<T> type.
     // collectAsState() update the homeScreenContent to show different UI based on the HomeUiState
     val uiState by viewModel.uiState.collectAsState()
 
     //passing in uiState to HomeScreenContent
-    HomeScreenContent(uiState = uiState)
+    HomeScreenContent(uiState = uiState, onTap = onTap)
 }
 
 @Composable
-fun HomeScreenContent(uiState: HomeUiState) {
+fun HomeScreenContent(uiState: HomeUiState, onTap: (Album) -> Unit) {
     LazyColumn(modifier = Modifier.padding(16.dp)) {
         item {
             HomeScreenHeader()
@@ -49,14 +50,16 @@ fun HomeScreenContent(uiState: HomeUiState) {
             }
             else -> { // showing album sections
                 items(uiState.feed) { item ->
-                    AlbumSection(section = item)
+                    AlbumSection(section = item, onTap = onTap)
                 }
             }
         }
     }
 }
+
+// handle the action all the way back to HomeScreen:
 @Composable
-private fun AlbumSection(section: Section) {
+private fun AlbumSection(section: Section, onTap: (Album) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -72,16 +75,20 @@ private fun AlbumSection(section: Section) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(section.albums) { item ->
-                AlbumCover(item)
+                AlbumCover(item, onTap)
             }
         }
 
     }
 }
 
+
 @Composable
-private fun AlbumCover(album: Album) {
-    Column {
+private fun AlbumCover(album: Album, onTap: (Album) -> Unit) {  //lambda expression
+    // (Album) -> Unit is equivalent to: fun onTap(album: Album) {}
+    // clickable in the modifier will get triggered if column gets clicked
+    // handle the tap event on albumCover
+    Column(modifier = Modifier.clickable { onTap(album) }){
         Box(modifier = Modifier.size(160.dp)) {
             AsyncImage(
                 model = album.cover,
