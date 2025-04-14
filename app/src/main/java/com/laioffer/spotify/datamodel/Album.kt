@@ -11,7 +11,7 @@ data class Album(
     val cover: String,
     val artists: String,
     val description: String
-): Serializable {
+): Serializable { // extend Serializable, so it can be saved in a file for safety
     companion object {
         fun empty(): Album {
             return Album(
