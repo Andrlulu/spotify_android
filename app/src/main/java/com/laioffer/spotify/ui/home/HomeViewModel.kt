@@ -23,7 +23,7 @@ class HomeViewModel @Inject constructor(
     // model / state
     // need a contianer:
     // public is dangerous, make it private and provide a public getter
-    private val _uiState = MutableStateFlow(HomeUiState(feed = listOf(), isLoading = false))
+    private val _uiState = MutableStateFlow(HomeUiState(feed = listOf(), isLoading = true))
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     // event: fetch the network while viewModel inits

@@ -3,6 +3,7 @@ package com.laioffer.spotify.repository;
 import com.laioffer.spotify.datamodel.Section;
 import com.laioffer.spotify.network.NetworkApi;
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import javax.inject.Inject;
@@ -24,6 +25,7 @@ public class HomeRepository @Inject constructor(
     // suspend indicates that this function have scope manage
     // withContext: change the thread
     suspend fun getHomeSections(): List<Section> = withContext(Dispatchers.IO) {
+//        delay(3000)
         networkApi.getHomeFeed().execute().body() ?: listOf()
     }
 }

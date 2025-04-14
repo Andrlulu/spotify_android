@@ -23,6 +23,12 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 //        return inflater.inflate(R.layout.fragment_home, container, false)
+        // ComposeView is an UI component in Android Jetpack Compose framework
+        // it is used to build interactive, modern and flexible UIs in a declarative way.
+        // similar to traditional view class but: instead of defining a layout in XML and then inflating it at runtime,
+        // ComposeView allows you to create the UI elements directly in Kotlin code.
+        // This makes it easier to crete dynamic and responsive UIs as the UI elements can be updated in realtime
+        // based on user input or other events.
         return ComposeView(requireContext()).apply {
             setContent {
                 MaterialTheme(colors = darkColors()){
