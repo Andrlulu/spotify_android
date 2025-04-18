@@ -9,12 +9,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PlaylistFragment : Fragment() { //extends Fragment. so ktor knows it is a fragment
     private val navArgs by navArgs<PlaylistFragmentArgs>()
+    private val viewModel: PlaylistViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -23,6 +25,7 @@ class PlaylistFragment : Fragment() { //extends Fragment. so ktor knows it is a 
         return ComposeView(requireContext()).apply {
             setContent {
                 MaterialTheme(colors = darkColors()) {
+                    PlaylistScreen(playlistViewModel = viewModel)
                 }
             }
         }
@@ -31,6 +34,7 @@ class PlaylistFragment : Fragment() { //extends Fragment. so ktor knows it is a 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("PlaylistFragment", navArgs.album.toString())
+        viewModel.fetchPlaylist(navArgs.album)
     }
 
 }
