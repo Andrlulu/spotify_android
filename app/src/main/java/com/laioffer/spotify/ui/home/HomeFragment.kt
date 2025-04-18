@@ -47,6 +47,7 @@ class HomeFragment : Fragment() {
 
     // Use the viewModel in the home fragment
     // handle a very slow response using coroutine
+    // onViewCreated is similar to react userEffect; source react network
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (viewModel.uiState.value.isLoading) {
