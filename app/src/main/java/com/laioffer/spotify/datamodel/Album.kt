@@ -1,9 +1,13 @@
 package com.laioffer.spotify.datamodel
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
+@Entity
 data class Album(
+    @PrimaryKey
     val id: Int,
     @SerializedName("album") // help map name to album in the json
     val name: String,

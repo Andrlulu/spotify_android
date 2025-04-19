@@ -21,6 +21,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import coil.compose.AsyncImage
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.laioffer.spotify.database.DatabaseDao
+import com.laioffer.spotify.datamodel.Album
 import com.laioffer.spotify.datamodel.Section
 import com.laioffer.spotify.network.NetworkApi
 import com.laioffer.spotify.network.NetworkModule
@@ -28,6 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import javax.inject.Inject
 
@@ -39,7 +42,9 @@ class MainActivity : AppCompatActivity() {
 
     // field injection:
     @Inject
-    lateinit var api: NetworkApi
+    lateinit var api: NetworkApi // field injection
+    @Inject
+    lateinit var databaseDao: DatabaseDao // field injection
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "We are at onCreate()")
@@ -66,6 +71,20 @@ class MainActivity : AppCompatActivity() {
             navController.popBackStack(it.itemId, inclusive = false)
             true
         }
+        // test database with dummy album
+//        GlobalScope.launch {
+//            withContext(Dispatchers.IO) {
+//                val album = Album(
+//                    id = 1,
+//                    name =  "Hexagonal",
+//                    year = "2008",
+//                    cover = "https://upload.wikimedia.org/wikipedia/en/6/6d/Leessang-Hexagonal_%28cover%29.jpg",
+//                    artists = "Lesssang",
+//                    description = "Leessang (Korean: 리쌍) was a South Korean hip hop duo, composed of Kang Hee-gun (Gary or Garie) and Gil Seong-joon (Gil)"
+//                )
+//                databaseDao.favoriteAlbum(album)
+//            }
+//        }
 
         // Test Retrofit
         // After dependcy injection, no longer need to create retrofit
