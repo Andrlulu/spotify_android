@@ -18,6 +18,7 @@ class FavoriteViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(FavoriteUiState(emptyList()))
     val uiState: StateFlow<FavoriteUiState> = _uiState
 
+
     // similar to onViewCreated to get initial data
     init {
         viewModelScope.launch {
