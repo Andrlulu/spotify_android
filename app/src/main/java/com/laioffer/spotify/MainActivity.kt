@@ -2,6 +2,7 @@ package com.laioffer.spotify
 
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,11 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.fragment.NavHostFragment
@@ -26,6 +29,8 @@ import com.laioffer.spotify.datamodel.Album
 import com.laioffer.spotify.datamodel.Section
 import com.laioffer.spotify.network.NetworkApi
 import com.laioffer.spotify.network.NetworkModule
+import com.laioffer.spotify.player.PlayerBar
+import com.laioffer.spotify.player.PlayerViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -45,6 +50,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var api: NetworkApi // field injection
     @Inject
     lateinit var databaseDao: DatabaseDao // field injection
+
+    private val playerViewModel: PlayerViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "We are at onCreate()")
@@ -70,6 +78,15 @@ class MainActivity : AppCompatActivity() {
             NavigationUI.onNavDestinationSelected(it, navController)
             navController.popBackStack(it.itemId, inclusive = false)
             true
+        }
+
+        val playerBar = findViewById<ComposeView>(R.id.player_bar)
+        playerBar.apply {
+            setContent {
+                MaterialTheme(colors = darkColors()) {
+                    PlayerBar(viewModel = playerViewModel)
+                }
+            }
         }
         // test database with dummy album
 //        GlobalScope.launch {

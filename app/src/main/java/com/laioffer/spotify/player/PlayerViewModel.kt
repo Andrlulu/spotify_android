@@ -82,6 +82,14 @@ class PlayerViewModel @Inject constructor(
         super.onPlayerError(error)
         Log.d("spotify", error.toString())
     }
+
+    fun seekTo(positionMs: Long) { // for jump to a specific position
+        // optimistically update:
+        _uiState.value = uiState.value.copy(
+            currentMs = positionMs // update the current position after release
+        )
+        exoPlayer.seekTo(positionMs)
+    }
 }
 
 data class PlayerUiState(
