@@ -20,13 +20,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
+    // exoPlayer is created first as the dependency of viewModel
     private val exoPlayer: ExoPlayer
 ) : ViewModel(), Player.Listener {
     private val _uiState = MutableStateFlow(PlayerUiState())
     val uiState: StateFlow<PlayerUiState> = _uiState.asStateFlow() // ui state of the song
     init {
-        exoPlayer.addListener(this)
+        exoPlayer.addListener(this) // this is the viewModel. viewModel registered as a player in the exoPlayer
         viewModelScope.launch {
+            // create a coroutine flow, data flow,, similar to the Flow<Boolean> in database
             flow {
                 while (true) {
                     if (exoPlayer.isPlaying) {
@@ -35,6 +37,7 @@ class PlayerViewModel @Inject constructor(
                     delay(1000)
                 }
             }.collect {
+                // constantly update the current song position and update the ui state to
                 _uiState.value = uiState.value.copy(currentMs = it.first, durationMs = it.second)
                 Log.d("SpotifyPlayer", "CurrentMs: ${it.first}, DurationMs: ${it.second}")
             }
@@ -60,7 +63,10 @@ class PlayerViewModel @Inject constructor(
     // if want to go to next song, use load() + play()
 
     override fun onCleared() {
-        exoPlayer.removeListener(this)
+        // when viewModel is destroyed, remove the listener, to prevent circular dependency, which could cause memory leak
+        // playerViewModel -> exoPlayer -> playerViewModel
+        // viewModel must be destroyed before the exoPlayer is destroyed
+        exoPlayer.removeListener(this) // this is the viewModel. viewModel registered as a player in the exoPlayer
         super.onCleared()
     }
 
